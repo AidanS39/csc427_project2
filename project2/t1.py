@@ -1,18 +1,19 @@
-def Bigram_MLE(list):
+def Unigram_MLE(list):
+    unigrams = {x : list.count(x) / len(list) for x in list}
+    return(unigrams)
+
+def Bigram_MLE(list, unigram):
     bigrams = {}
     numTokens = len(list)
-    print(list)
-    print(numTokens)
     for i in range(len(list) - 1):
         if (list[i], list[i+1]) in bigrams:
             bigrams[list[i], list[i+1]] += 1
         else:
             bigrams[list[i], list[i+1]] = 1
 
-    for item in bigrams:
-        print(item, bigrams[item])
-    print(dict.items(bigrams))
-    print(numTokens)
+    bigrams = {x : (bigrams[x] / (unigram[x[0]] * numTokens)) for x in bigrams}
+    print(bigrams)
+
     
                 
 
@@ -24,5 +25,6 @@ words = []
 with open('corpus.txt', "r") as file:
     words = file.read().split()
 
-
-Bigram_MLE(words)
+unigrams = Unigram_MLE(words)
+# print(unigrams)
+Bigram_MLE(words, unigrams)
