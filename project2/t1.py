@@ -12,7 +12,7 @@ def Bigram_MLE(list, unigram):
             bigrams[list[i], list[i+1]] = 1
 
     bigrams = {x : (bigrams[x] / (unigram[x[0]] * numTokens)) for x in bigrams}
-    print(bigrams)
+    return bigrams
 
     
                 
@@ -26,5 +26,6 @@ with open('corpus.txt', "r") as file:
     words = file.read().split()
 
 unigrams = Unigram_MLE(words)
-# print(unigrams)
-Bigram_MLE(words, unigrams)
+print(unigrams)
+bigrams = Bigram_MLE(words, unigrams)
+print(bigrams)
