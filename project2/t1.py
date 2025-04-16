@@ -3,15 +3,7 @@ def Unigram_MLE(list):
     return(unigrams)
 
 def Bigram_MLE(list, unigram):
-    bigrams = {}
-    numTokens = len(list)
-    for i in range(len(list) - 1):
-        if (list[i], list[i+1]) in bigrams:
-            bigrams[list[i], list[i+1]] += 1
-        else:
-            bigrams[list[i], list[i+1]] = 1
-
-    bigrams = {x : (bigrams[x] / (unigram[x[0]] * numTokens)) for x in bigrams}
+    bigrams = {(list[i], list[i+1]): sum(1 for j in range(len(list) - 1) if list[j] == list[i] and list[j+1] == list[i+1]) / (unigram[list[i]] * len(list)) for i in range(len(list) - 1)}
     return bigrams
 
     
