@@ -21,6 +21,7 @@ def compute_sentence_bigram(bigram):
         count = 0
         for pair in bigram:
             if (pair[0] == sentence[index-1] and bigram.get(pair) != 0.0):
+                print(pair)
                 count += bigram.get(pair)
                 if count >= number:
                     sentence.append(pair[1])
