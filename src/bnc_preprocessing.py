@@ -1,7 +1,7 @@
 import nltk
 from nltk.corpus.reader import bnc
 
-reader = bnc.BNCCorpusReader(root='../corpora/bnc/Texts/fic/', fileids=r'.*\.xml')
+reader = bnc.BNCCorpusReader(root='../corpora/bnc/Texts/', fileids=r'.*\.xml')
 sents = reader.tagged_sents(strip_space=True, stem=False)[0:10]
 
 new_sents = list()
