@@ -1,0 +1,11 @@
+--2025-04-18 21:40:25--  https://llds.ling-phil.ox.ac.uk/llds/xmlui/bitstream/handle/20.500.14106/2553/2553.zip?sequence=4
+Resolving llds.ling-phil.ox.ac.uk (llds.ling-phil.ox.ac.uk)... 163.1.86.107
+Connecting to llds.ling-phil.ox.ac.uk (llds.ling-phil.ox.ac.uk)|163.1.86.107|:443... connected.
+HTTP request sent, awaiting response... 200 200
+Length: unspecified [application/zip]
+Saving to: ‘2553.zip?sequence=4’
+
+2553.zip?sequence=4                               [<=>                                                                                              ]       0  --.-KB/s               2553.zip?sequence=4                               [ <=>                                                                                             ]  95.91K   421KB/s               2553.zip?sequence=4                               [  <=>                                                                                            ] 863.16K  1.85MB/s               2553.zip?sequence=4                               [   <=>                                                                                           ]   6.35M  9.29MB/s               2553.zip?sequence=4                               [    <=>                                                                                          ]  15.25M  16.7MB/s               2553.zip?sequence=4                               [     <=>                                                                                         ]  22.05M  20.2MB/s    in 1.1s    
+
+2025-04-18 21:40:28 (20.2 MB/s) - ‘2553.zip?sequence=4’ saved [23125825]
+
