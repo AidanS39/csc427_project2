@@ -95,7 +95,22 @@ def compute_bigram_smoothed_model(corpus):
 # Generate Unigram Sentence
 
 def generate_sentence_unigram(model):
-    # TODO: write function to generate sentence using a unigram model!
+    sentence = ["<s>"]
+    index = 1
+    while (sentence[index-1] != "</s>"):
+        random_prob = random.random()
+        print(random_prob)
+        sum_prob = 0
+        for unigram in model:
+                sum_prob += model.get(unigram)
+                if sum_prob >=random_prob:
+                    sentence.append(unigram)
+                    index += 1
+                    break
+                    
+        print(sentence)
+        print(index)
+
     return
 
 # Generate Bigram Sentence
