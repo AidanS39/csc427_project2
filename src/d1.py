@@ -1,5 +1,6 @@
 import random
 import time
+import math
 
 # Unsmoothed Unigram
 
@@ -151,7 +152,22 @@ def find_smoothed_probability(model, token, unigram_counts, vocab_cardinality):
 # Generate Unigram Sentence
 
 def generate_sentence_unigram(model):
-    # TODO: write function to generate sentence using a unigram model!
+    sentence = ["<s>"]
+    index = 1
+    while (sentence[index-1] != "</s>"):
+        random_prob = random.random()
+        print(random_prob)
+        sum_prob = 0
+        for unigram in model:
+                sum_prob += model.get(unigram)
+                if sum_prob >=random_prob:
+                    sentence.append(unigram)
+                    index += 1
+                    break
+                    
+        print(sentence)
+        print(index)
+
     return
 
 # Generate Bigram Sentence
@@ -231,8 +247,11 @@ def generate_sentence_smoothedbigram_v2(model, corpus):
 
 # computes the perplexity of a unigram model
 def compute_unigram_ppl(test_set, model):
-    # TODO: write function to compute the perplexity of a test set using a unigram model! (is this needed?)
-    return
+    #
+    log_total = 0
+    for t in test_set:
+        log_total += -math.log2(model[t])
+    return pow(2, log_total / len(test_set))
 
 # Bigram Perplexity
 
@@ -242,6 +261,14 @@ def compute_bigram_ppl(test_set, model):
     for t in [1 / model[test_set[i], test_set[i+1]] for i in range(len(test_set) - 1)]:
         total *= t
     return pow(total, 1 / len(test_set))
+
+def log_compute_bigram_ppl(test_set, model):
+    log_total = 0 
+    bigrams = [[test_set[i], test_set[i+1]] for i in range(len(test_set) - 1)]
+
+    for t in bigrams:
+        log_total += -math.log2(model[t])
+    return pow(2, log_total / len(bigrams))
 
 # Examples
 
