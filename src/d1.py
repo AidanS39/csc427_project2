@@ -4,6 +4,7 @@ import math
 import sys
 
 
+
 # returns a dictionary of every occuring word in the corpus and their corresponding number of occurences
 def compute_unigram_counts(corpus, vocab):
 
@@ -92,6 +93,7 @@ def get_unsmoothed_probability(model, token):
 
 
 
+# returns a dictionary of occuring words in the corpus and their corresponding smoothed unigram probabilitiy
 def compute_smoothed_unigram_model(corpus):
     
     # initialize vocab
@@ -114,6 +116,7 @@ def compute_smoothed_unigram_model(corpus):
 
 
 
+# returns a dictionary of occuring pairs in the corpus and their corresponding smoothed bigram probabilitiy
 def compute_smoothed_bigram_model(corpus):
     
     # initialize vocab
@@ -188,7 +191,7 @@ def generate_sentence_unigram(model):
 
 
 # generates a sentence based off an unsmoothed bigram model
-def generate_sentence_bigram(model, corpus):
+def generate_sentence_unsmoothed_bigram(model, corpus):
 
     #initialize vocab
     vocab = set(corpus)
@@ -346,12 +349,12 @@ print(f"Compute time for smoothed bigram model: {(int)((end_time - start_time) /
 # start_time = time.time()
 # generate_sentence_unigram(unigrams)
 # end_time = time.time()
-# print(f"Compute time for generating sentences from unigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+# print(f"Compute time for generating sentences from unsmoothed unigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
 
 start_time = time.time()
-generate_sentence_bigram(bigrams, corpus)
+generate_sentence_unsmoothed_bigram(bigrams, corpus)
 end_time = time.time()
-print(f"Compute time for generating sentences from bigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+print(f"Compute time for generating sentences from unsmoothed bigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
 
 # start_time = time.time()
 # generate_sentence_unigram(smoothed_unigrams)
