@@ -1,7 +1,7 @@
 import random
 import time
 import math
-
+import sys
 
 
 # returns a dictionary of every occuring word in the corpus and their corresponding number of occurences
@@ -292,31 +292,43 @@ def compute_bigram_ppl(test_set, model, unigram_counts, cardinality):
 
 # Examples
 
+if (len(sys.argv) < 2):
+    print("Insufficient number of arguments (need to specify a file path!)")
+    exit()
+else:
+    corpus_file_path = sys.argv[1]
+
+if (len(sys.argv) < 3):
+    print("Test set not specified - using default \"test_bnc_corpus.txt\"")
+    test_set_path = "test_bnc_corpus.txt"
+else:
+    test_set_path = sys.argv[2]
+
 corpus = []
 
-with open('brown_corpus.txt', "r") as file:
+with open(corpus_file_path, "r") as file:
     corpus = file.read().split()
 
-with open('test_bnc_corpus.txt', "r") as file:
+with open(test_set_path, "r") as file:
     test_set = file.read().split()
 
 vocab = set(corpus)
 unigram_counts = compute_unigram_counts(corpus, vocab)
 
-start_time = time.time()
-unigrams = compute_unigram_model(corpus)
-end_time = time.time()
-print(f"length of vocab: {len(set(corpus))}")
-print(f"length of unigrams: {len(unigrams)}")
-print(f"Compute time for unigram model: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
-
+# start_time = time.time()
+# unigrams = compute_unigram_model(corpus)
+# end_time = time.time()
+# print(f"length of vocab: {len(set(corpus))}")
+# print(f"length of unigrams: {len(unigrams)}")
+# print(f"Compute time for unigram model: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+ 
 start_time = time.time()
 bigrams = compute_bigram_model(corpus)
 end_time = time.time()
 print(f"length of vocab squared: {pow(len(set(corpus)), 2)}")
 print(f"length of bigrams: {len(bigrams)}")
 print(f"Compute time for bigram model: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
-
+ 
 start_time = time.time()
 smoothed_unigrams = compute_smoothed_unigram_model(corpus)
 end_time = time.time()
@@ -331,15 +343,25 @@ print(f"length of vocab squared: {pow(len(set(corpus)), 2)}")
 print(f"length of smoothed_bigrams: {len(smoothed_bigrams)}")
 print(f"Compute time for smoothed bigram model: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
 
+# start_time = time.time()
+# generate_sentence_unigram(unigrams)
+# end_time = time.time()
+# print(f"Compute time for generating sentences from unigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+
 start_time = time.time()
 generate_sentence_bigram(bigrams, corpus)
 end_time = time.time()
-print(f"Compute time for generating sentences: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+print(f"Compute time for generating sentences from bigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+
+# start_time = time.time()
+# generate_sentence_unigram(smoothed_unigrams)
+# end_time = time.time()
+# print(f"Compute time for generating sentences from smoothed unigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
 
 # start_time = time.time()
 # generate_sentence_smoothed_bigram(smoothed_bigrams, corpus)
 # end_time = time.time()
-# print(f"Compute time for generating sentences: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+# print(f"Compute time for generating sentences from smoothed bigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
  
 start_time = time.time()
 unigram_perplexity = compute_unigram_ppl(test_set, smoothed_unigrams, unigram_counts, len(vocab))
