@@ -46,7 +46,7 @@ The Brown Corpus consists of about 1.1 million tokens after preprocessing. For p
 
 2. BNC Corpus: Baby Edition
 
-The BNC Corpus: Baby Edition consists of about 4.6 million tokens after preprocessing. For preprocessing we stripped standalone punctuation tokens off of the corpus. Since this corpus was only available in XML format, we used the NLTK library to parse the sentences from the corpus, but the corpus was locally downloaded from this website: https://llds.ling-phil.ox.ac.uk/llds/xmlui/handle/20.500.14106/2553. This corpus was split into a training set and test set, which is first 80% and last 20% of the corpus, respectively. The preprocessed version of the BNC Corpus: Baby Edition is available in the repository under the training set text file `bnc_corpus.txt` and the test set text file `test_bnc_corpus.txt`.
+The BNC Corpus: Baby Edition consists of about 4.6 million tokens after preprocessing. For preprocessing we stripped standalone punctuation tokens off of the corpus. Since this corpus was only available in XML format, we used the NLTK library to parse the sentences from the corpus, but the corpus was locally downloaded from this website: https://llds.ling-phil.ox.ac.uk/llds/xmlui/handle/20.500.14106/2553. This corpus was split into a training set and 2 test sets, which is first 80%, next 10%, and last 10%, respectively. The preprocessed version of the BNC Corpus: Baby Edition is available in the repository under the training set text file `bnc_corpus.txt` and the test set text files `test_bnc_corpus.txt` and `test_bnc_corpus_2.txt`.
 
 
 
