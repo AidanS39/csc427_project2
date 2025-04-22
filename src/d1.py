@@ -171,20 +171,19 @@ def generate_sentence_unigram(model):
     
     while (sentence[index-1] != "</s>"):
         random_prob = random.random()
-        print(random_prob)
         sum_prob = 0
         for unigram in model:
-                sum_prob += model[unigram]
-                if sum_prob >= random_prob:
-                    sentence.append(unigram)
-                    index += 1
-                    break
-        
+    
+            sum_prob += model[unigram]
+            if (sum_prob >= random_prob) and (unigram != "<s>"):
+                sentence.append(unigram)
+                index += 1
+                break
+    
         if sum_prob < random_prob:
             sentence.append("</s>")
                     
-        print(sentence)
-        print(index)
+    print(sentence)
 
     return sentence
 
@@ -196,23 +195,19 @@ def generate_sentence_unsmoothed_bigram(model, corpus):
     #initialize vocab
     vocab = set(corpus)
 
-    # find the counts of every occuring word in the corpus
-    unigram_counts = compute_unigram_counts(corpus, vocab)
-    
+
     sentence = ["<s>"]
     index = 1
     while (sentence[index-1] != "</s>"):
         random_prob = random.random()
-        print(random_prob)
         sum_prob = 0
 
         for word in vocab:
             bigram_pair = (sentence[index-1], word)
             current_prob = get_unsmoothed_probability(model, bigram_pair)
             if current_prob > 0:
-                print(bigram_pair)
                 sum_prob += current_prob
-                if sum_prob >= random_prob:
+                if (sum_prob >= random_prob) and (bigram_pair != "<s>"):
                     sentence.append(word)
                     index += 1
                     break
@@ -220,8 +215,7 @@ def generate_sentence_unsmoothed_bigram(model, corpus):
         if sum_prob < random_prob:
             sentence.append("</s>")
         
-        print(sentence)
-        print(index)
+    print(sentence)
 
     return sentence
 
@@ -243,7 +237,6 @@ def generate_sentence_smoothed_bigram(model, corpus):
     index = 1
     while (sentence[index-1] != "</s>"):
         random_prob = random.random()
-        print(random_prob)
         sum_probs = 0
 
         # initialize a baseline prob variable for all bigrams that dont exist in the model
@@ -261,7 +254,7 @@ def generate_sentence_smoothed_bigram(model, corpus):
             if current_prob > 0:
                 sum_probs += current_prob
                 # print(sum_probs)
-                if sum_probs >= random_prob:
+                if (sum_probs >= random_prob) and (bigram_pair != "<s>"):
                     sentence.append(word)
                     index += 1
                     break
@@ -270,7 +263,6 @@ def generate_sentence_smoothed_bigram(model, corpus):
             index += 1
 
     print(sentence)
-    print(index)
 
 
 
@@ -332,10 +324,10 @@ unigram_counts = compute_unigram_counts(corpus, vocab)
 
 # UNSMOOTHED BIGRAM MODEL
 
-# start_time = time.time()
-# bigrams = compute_bigram_model(corpus)
-# end_time = time.time()
-# print(f"Compute time for bigram model: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+start_time = time.time()
+bigrams = compute_bigram_model(corpus)
+end_time = time.time()
+print(f"Compute time for bigram model: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
 
 
 
@@ -368,10 +360,10 @@ unigram_counts = compute_unigram_counts(corpus, vocab)
 
 # UNSMOOTHED BIGRAM SENTENCE GENERATION
 
-# start_time = time.time()
-# generate_sentence_unsmoothed_bigram(bigrams, corpus)
-# end_time = time.time()
-# print(f"Compute time for generating sentences from unsmoothed bigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+start_time = time.time()
+generate_sentence_unsmoothed_bigram(bigrams, corpus)
+end_time = time.time()
+print(f"Compute time for generating sentences from unsmoothed bigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
 
 
 

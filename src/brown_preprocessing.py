@@ -14,7 +14,7 @@ for sentence in sents:
     
     for word in sentence:
         # Strip punctuation 
-        if word not in string.punctuation:
+        if word not in string.punctuation and word not in ["''","``", '"']:
             new_sentence.append(word)
     
     new_sentence.append("</s>")
