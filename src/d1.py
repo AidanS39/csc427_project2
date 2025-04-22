@@ -12,9 +12,10 @@ def compute_unigram_counts(corpus, vocab):
     unigram_counts = {word: 0 for word in vocab}
 
     #iterate through corpus, increment word's count every time it is found in the corpus
-    for i in range(len(corpus) - 1):
-        unigram_counts[corpus[i]] = unigram_counts[corpus[i]] + 1
-        
+    for sentence in corpus:
+        for word in sentence:
+            unigram_counts[word] += 1
+
     # return dictionary of unigram counts
     return unigram_counts
 
@@ -24,10 +25,12 @@ def compute_unigram_counts(corpus, vocab):
 def compute_unigram_model(corpus):
 
     # initialize vocab
-    vocab = set(corpus)
+    vocab = set()
+    for sentence in corpus:
+        vocab.update(sentence)
 
     # calculate length of corpus
-    corpus_length = len(corpus)
+    corpus_length = sum([len(sentence) for sentence in corpus])
 
     # find the counts of every occuring word in the corpus
     unigram_counts = compute_unigram_counts(corpus, vocab)
@@ -44,13 +47,14 @@ def compute_bigram_counts(corpus):
     bigram_counts = dict()
 
     #iterate through corpus, increment pair's count every time it is found in the corpus
-    for i in range(len(corpus) - 1):
-        # if found bigram pair is not in counts dict, add it to dictionary with a count of 1
-        if (corpus[i], corpus[i+1]) not in bigram_counts:
-            bigram_counts[(corpus[i], corpus[i+1])] = 1
-        # if found bigram pair is in counts dict, just increment its count by 1
-        else:
-            bigram_counts[(corpus[i], corpus[i+1])] += 1
+    for sentence in corpus:
+        for i in range(len(sentence) - 1):
+            # if found bigram pair is not in counts dict, add it to dictionary with a count of 1
+            if (sentence[i], sentence[i+1]) not in bigram_counts:
+                bigram_counts[(sentence[i], sentence[i+1])] = 1
+                # if found bigram pair is in counts dict, just increment its count by 1
+            else:
+                bigram_counts[(sentence[i], sentence[i+1])] += 1
     
     # return dictionary of bigram counts
     return bigram_counts
@@ -59,9 +63,12 @@ def compute_bigram_counts(corpus):
 
 # returns a dictionary of occuring pairs in the corpus and their corresponding bigram probabilitiy
 def compute_bigram_model(corpus):
-    # initialize the vocab
-    vocab = set(corpus)
 
+    # initialize vocab
+    vocab = set()
+    for sentence in corpus:
+        vocab.update(sentence)
+    
     # find the counts of every occuring word in the corpus
     unigram_counts = compute_unigram_counts(corpus, vocab)
 
@@ -97,10 +104,12 @@ def get_unsmoothed_probability(model, token):
 def compute_smoothed_unigram_model(corpus):
     
     # initialize vocab
-    vocab = set(corpus)
-
+    vocab = set()
+    for sentence in corpus:
+        vocab.update(sentence)
+    
     # calculate length of corpus
-    corpus_length = len(corpus)
+    corpus_length = sum([len(sentence) for sentence in corpus])
 
     # calculate cardinality of vocab
     vocab_length = len(vocab)
@@ -120,10 +129,12 @@ def compute_smoothed_unigram_model(corpus):
 def compute_smoothed_bigram_model(corpus):
     
     # initialize vocab
-    vocab = set(corpus)
-
+    vocab = set()
+    for sentence in corpus:
+        vocab.update(sentence)
+    
     # calculate length of corpus
-    corpus_length = len(corpus)
+    corpus_length = sum([len(sentence) for sentence in corpus])
 
     # calculate cardinality of vocab
     vocab_length = len(vocab)
@@ -167,9 +178,8 @@ def get_smoothed_probability(model, token, unigram_counts, vocab_cardinality):
 # generates a sentence based off an unsmoothed/smoothed unigram model
 def generate_sentence_unigram(model):
     sentence = ["<s>"]
-    index = 1
     
-    while (sentence[index-1] != "</s>"):
+    while (sentence[-1] != "</s>"):
         random_prob = random.random()
         sum_prob = 0
         for unigram in model:
@@ -177,7 +187,6 @@ def generate_sentence_unigram(model):
             sum_prob += model[unigram]
             if (sum_prob >= random_prob) and (unigram != "<s>"):
                 sentence.append(unigram)
-                index += 1
                 break
     
         if sum_prob < random_prob:
@@ -192,24 +201,23 @@ def generate_sentence_unigram(model):
 # generates a sentence based off an unsmoothed bigram model
 def generate_sentence_unsmoothed_bigram(model, corpus):
 
-    #initialize vocab
-    vocab = set(corpus)
-
+    # initialize vocab
+    vocab = set()
+    for sentence in corpus:
+        vocab.update(sentence)
 
     sentence = ["<s>"]
-    index = 1
-    while (sentence[index-1] != "</s>"):
+    while (sentence[-1] != "</s>"):
         random_prob = random.random()
         sum_prob = 0
 
         for word in vocab:
-            bigram_pair = (sentence[index-1], word)
+            bigram_pair = (sentence[-1], word)
             current_prob = get_unsmoothed_probability(model, bigram_pair)
             if current_prob > 0:
                 sum_prob += current_prob
                 if (sum_prob >= random_prob) and (bigram_pair != "<s>"):
                     sentence.append(word)
-                    index += 1
                     break
         
         if sum_prob < random_prob:
@@ -224,8 +232,10 @@ def generate_sentence_unsmoothed_bigram(model, corpus):
 # generates a sentence based off a smoothed bigram model
 def generate_sentence_smoothed_bigram(model, corpus):
 
-    #initialize vocab
-    vocab = set(corpus)
+    # initialize vocab
+    vocab = set()
+    for sentence in corpus:
+        vocab.update(sentence)
 
     # calculate the cardinality of the vocab
     vocab_length = len(vocab)
@@ -234,8 +244,7 @@ def generate_sentence_smoothed_bigram(model, corpus):
     unigram_counts = compute_unigram_counts(corpus, vocab)
     
     sentence = ["<s>"]
-    index = 1
-    while (sentence[index-1] != "</s>"):
+    while (sentence[-1] != "</s>"):
         random_prob = random.random()
         sum_probs = 0
 
@@ -243,10 +252,10 @@ def generate_sentence_smoothed_bigram(model, corpus):
         ## note: baseline_prob is the probability assigned to any non-occuring bigram.
         ##       this is because the smoothed probs of any non-occuring bigram pair are
         ##       entirely dependent on the prob of the first word in the bigram pair.
-        baseline_prob = 1 / (unigram_counts[sentence[index-1]] + vocab_length)
+        baseline_prob = 1 / (unigram_counts[sentence[-1]] + vocab_length)
 
         for word in vocab:
-            bigram_pair = (sentence[index-1], word)
+            bigram_pair = (sentence[-1], word)
             if bigram_pair in model:
                 current_prob = get_smoothed_probability(model, bigram_pair, unigram_counts, vocab_length)
             else:
@@ -256,11 +265,9 @@ def generate_sentence_smoothed_bigram(model, corpus):
                 # print(sum_probs)
                 if (sum_probs >= random_prob) and (bigram_pair != "<s>"):
                     sentence.append(word)
-                    index += 1
                     break
         if sum_probs < random_prob:
             sentence.append("</s>")
-            index += 1
 
     print(sentence)
 
@@ -269,20 +276,35 @@ def generate_sentence_smoothed_bigram(model, corpus):
 # computes the perplexity of a unigram model
 def compute_unigram_ppl(test_set, model, unigram_counts, cardinality):
     log_total = 0
-    for t in test_set:
-        log_total += -math.log2(get_smoothed_probability(model, t, unigram_counts, cardinality))
-    return pow(2, log_total / len(test_set))
+
+    # calculate length of test set (number of words in test set)
+    test_set_length = sum([len(sentence) for sentence in test_set])
+
+    for sentence in test_set:
+        for word in sentence:
+            log_total += -math.log2(get_smoothed_probability(model, word, unigram_counts, cardinality))
+    return pow(2, log_total / test_set_length)
 
 
 
 # computes the perplexity of a bigram model
 def compute_bigram_ppl(test_set, model, unigram_counts, cardinality):
-    log_total = 0 
-    bigrams = {(test_set[i], test_set[i+1]) for i in range(len(test_set) - 1)}
+    log_total = 0
+    
+    # calculate length of test set (number of words in test set)
+    test_set_length = sum([len(sentence) for sentence in test_set])
+    
+    #initialize bigrams from test set
+    test_bigrams = list()
 
-    for t in bigrams:
-            log_total += -math.log2(get_smoothed_probability(model, t, unigram_counts, cardinality))
-    return pow(2, log_total / len(test_set))
+    for sentence in test_set:
+        for i in range(len(sentence) - 1):
+            test_bigrams.append((sentence[i], sentence[i+1]))
+
+    for pair in test_bigrams:
+            log_total += -math.log2(get_smoothed_probability(model, pair, unigram_counts, cardinality))
+
+    return pow(2, log_total / test_set_length)
 
 
 
@@ -301,102 +323,111 @@ else:
     test_set_path = sys.argv[2]
 
 corpus = []
+test_set = []
 
 with open(corpus_file_path, "r") as file:
-    corpus = file.read().split()
+    for sentence in file:
+        tokenized_sentence = sentence.split()
+        corpus.append(tokenized_sentence)
 
 with open(test_set_path, "r") as file:
-    test_set = file.read().split()
+    for sentence in file:
+        tokenized_sentence = sentence.split()
+        test_set.append(tokenized_sentence)
 
-vocab = set(corpus)
+# initialize vocab
+vocab = set()
+for sentence in corpus:
+    vocab.update(sentence)
+
+# find the counts of every occuring word in the corpus
 unigram_counts = compute_unigram_counts(corpus, vocab)
-
 
 
 # UNSMOOTHED UNIGRAM MODEL
 
-# start_time = time.time()
-# unigrams = compute_unigram_model(corpus)
-# end_time = time.time()
-# print(f"Compute time for unigram model: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+start_time = time.time()
+unigrams = compute_unigram_model(corpus)
+end_time = time.time()
+print(f"Compute time for unigram model: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
  
 
 
 # UNSMOOTHED BIGRAM MODEL
 
-# start_time = time.time()
-# bigrams = compute_bigram_model(corpus)
-# end_time = time.time()
-# print(f"Compute time for bigram model: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+start_time = time.time()
+bigrams = compute_bigram_model(corpus)
+end_time = time.time()
+print(f"Compute time for bigram model: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
 
 
 
 # SMOOTHED UNIGRAM MODEL
 
-# start_time = time.time()
-# smoothed_unigrams = compute_smoothed_unigram_model(corpus)
-# end_time = time.time()
-# print(f"Compute time for smoothed unigram model: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+start_time = time.time()
+smoothed_unigrams = compute_smoothed_unigram_model(corpus)
+end_time = time.time()
+print(f"Compute time for smoothed unigram model: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
 
 
 
 # SMOOTHED BIGRAM MODEL
 
-# start_time = time.time()
-# smoothed_bigrams = compute_smoothed_bigram_model(corpus)
-# end_time = time.time()
-# print(f"Compute time for smoothed bigram model: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
-
-
-
-# UNSMOOTHED UNIGRAM SENTENCE GENERATION
-
+start_time = time.time()
+smoothed_bigrams = compute_smoothed_bigram_model(corpus)
+end_time = time.time()
+print(f"Compute time for smoothed bigram model: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+# 
+# 
+# 
+# # UNSMOOTHED UNIGRAM SENTENCE GENERATION
+# 
 # start_time = time.time()
 # generate_sentence_unigram(unigrams)
 # end_time = time.time()
 # print(f"Compute time for generating sentences from unsmoothed unigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
-
-
-
-# UNSMOOTHED BIGRAM SENTENCE GENERATION
-
+# 
+# 
+# 
+# # UNSMOOTHED BIGRAM SENTENCE GENERATION
+# 
 # start_time = time.time()
 # generate_sentence_unsmoothed_bigram(bigrams, corpus)
 # end_time = time.time()
 # print(f"Compute time for generating sentences from unsmoothed bigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
-
-
-
-# SMOOTHED UNIGRAM SENTENCE GENERATION
-
+# 
+# 
+# 
+# # SMOOTHED UNIGRAM SENTENCE GENERATION
+# 
 # start_time = time.time()
 # generate_sentence_unigram(smoothed_unigrams)
 # end_time = time.time()
 # print(f"Compute time for generating sentences from smoothed unigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
-
-
-
-# SMOOTHED BIGRAM SENTENCE GENERATION (NOT RELIABLE)
-
-# start_time = time.time()
-# generate_sentence_smoothed_bigram(smoothed_bigrams, corpus)
-# end_time = time.time()
-# print(f"Compute time for generating sentences from smoothed bigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
- 
-
-
-# SMOOTHED UNIGRAM PERPLEXITY
-
+# 
+# 
+# 
+# # SMOOTHED BIGRAM SENTENCE GENERATION (NOT RELIABLE)
+# 
+# # start_time = time.time()
+# # generate_sentence_smoothed_bigram(smoothed_bigrams, corpus)
+# # end_time = time.time()
+# # print(f"Compute time for generating sentences from smoothed bigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+#  
+# 
+# 
+# # SMOOTHED UNIGRAM PERPLEXITY
+# 
 # start_time = time.time()
 # unigram_perplexity = compute_unigram_ppl(test_set, smoothed_unigrams, unigram_counts, len(vocab))
 # end_time = time.time()
 # print(f"unigram perplexity: {unigram_perplexity}")
 # print(f"Compute time for calculating unigram perplexity: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
-
-
-
-# SMOOTHED BIGRAM PERPLEXITY
-
+# 
+# 
+# 
+# # SMOOTHED BIGRAM PERPLEXITY
+# 
 # start_time = time.time()
 # bigram_perplexity = compute_bigram_ppl(test_set, smoothed_bigrams, unigram_counts, len(vocab))
 # end_time = time.time()
@@ -405,10 +436,100 @@ unigram_counts = compute_unigram_counts(corpus, vocab)
 
 
 
+# TOP 10 MOST PROBABLE UNIGRAMS/BIGRAMS
+
+# calculate length of corpus
+corpus_length = sum([len(sentence) for sentence in corpus])
+
+# find the counts of every occuring word in the corpus
+unigram_counts = compute_unigram_counts(corpus, vocab)
+
+top_10_unigrams = list()
+top_10_unigrams.append([" ", -1])
+
+for key in unigram_counts.keys():
+    value = unigram_counts.get(key)
+    for index in range(len(top_10_unigrams)):
+        top_value = top_10_unigrams[index][1]
+        if value > top_value:
+            top_10_unigrams.insert(index, [key, value])
+        if len(top_10_unigrams) > 10:
+            top_10_unigrams.pop()
+            break
+
+print("Top 10 Unsmoothed Unigrams")
+for item in top_10_unigrams:
+    item[1] = item[1] / corpus_length
+    print(f"{item[0]}   {item[1]}   {unigrams[item[0]]}")
+
+# find the counts of every occuring pair in the corpus
+bigram_counts = compute_bigram_counts(corpus)
+
+top_10_bigrams = list()
+top_10_bigrams.append([(" ", " "), -1])
+
+for key in bigram_counts.keys():
+    value = bigram_counts.get(key)
+    for index in range(len(top_10_bigrams)):
+        top_value = top_10_bigrams[index][1]
+        if value > top_value:
+            top_10_bigrams.insert(index, [key, value])
+        if len(top_10_bigrams) > 10:
+            top_10_bigrams.pop()
+            break
+
+print("Top 10 Unsmoothed Bigrams")
+for item in top_10_bigrams:
+    item[1] = item[1] / len(bigram_counts)
+    print(f"{item[0]}   {item[1]}  {bigrams[item[0]]}")
 
 
+# TOP 10 MOST PROBABLE SMOOTHED UNIGRAMS/BIGRAMS
 
+# calculate length of corpus
+corpus_length = sum([len(sentence) for sentence in corpus])
 
+# find the counts of every occuring word in the corpus
+unigram_counts = compute_unigram_counts(corpus, vocab)
+
+top_10_unigrams = list()
+top_10_unigrams.append([" ", -1])
+
+for key in unigram_counts.keys():
+    value = unigram_counts.get(key)
+    for index in range(len(top_10_unigrams)):
+        top_value = top_10_unigrams[index][1]
+        if value > top_value:
+            top_10_unigrams.insert(index, [key, value])
+        if len(top_10_unigrams) > 10:
+            top_10_unigrams.pop()
+            break
+
+print("Top 10 Smoothed Unigrams")
+for item in top_10_unigrams:
+    item[1] = item[1] / corpus_length
+    print(f"{item[0]}   {item[1]}   {smoothed_unigrams[item[0]]}")
+
+# find the counts of every occuring pair in the corpus
+bigram_counts = compute_bigram_counts(corpus)
+
+top_10_bigrams = list()
+top_10_bigrams.append([(" ", " "), -1])
+
+for key in bigram_counts.keys():
+    value = bigram_counts.get(key)
+    for index in range(len(top_10_bigrams)):
+        top_value = top_10_bigrams[index][1]
+        if value > top_value:
+            top_10_bigrams.insert(index, [key, value])
+        if len(top_10_bigrams) > 10:
+            top_10_bigrams.pop()
+            break
+
+print("Top 10 Smoothed Bigrams")
+for item in top_10_bigrams:
+    item[1] = item[1] / len(bigram_counts)
+    print(f"{item[0]}   {item[1]}  {smoothed_bigrams[item[0]]}")
 
 
 
