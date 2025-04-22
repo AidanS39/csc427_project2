@@ -460,7 +460,7 @@ for key in unigram_counts.keys():
 print("Top 10 Unsmoothed Unigrams")
 for item in top_10_unigrams:
     item[1] = item[1] / corpus_length
-    print(f"{item[0]}   {item[1]}   {unigrams[item[0]]}")
+    print(f"{item[0]}\t {item[1]}\t {unigrams[item[0]]}")
 
 # find the counts of every occuring pair in the corpus
 bigram_counts = compute_bigram_counts(corpus)
@@ -481,7 +481,7 @@ for key in bigram_counts.keys():
 print("Top 10 Unsmoothed Bigrams")
 for item in top_10_bigrams:
     item[1] = item[1] / len(bigram_counts)
-    print(f"{item[0]}   {item[1]}  {bigrams[item[0]]}")
+    print(f"{item[0]}\t {item[1]}\t {bigrams[item[0]]}")
 
 
 # TOP 10 MOST PROBABLE SMOOTHED UNIGRAMS/BIGRAMS
@@ -508,7 +508,7 @@ for key in unigram_counts.keys():
 print("Top 10 Smoothed Unigrams")
 for item in top_10_unigrams:
     item[1] = item[1] / corpus_length
-    print(f"{item[0]}   {item[1]}   {smoothed_unigrams[item[0]]}")
+    print(f"{item[0]}\t {item[1]}\t {smoothed_unigrams[item[0]]}")
 
 # find the counts of every occuring pair in the corpus
 bigram_counts = compute_bigram_counts(corpus)
@@ -529,7 +529,7 @@ for key in bigram_counts.keys():
 print("Top 10 Smoothed Bigrams")
 for item in top_10_bigrams:
     item[1] = item[1] / len(bigram_counts)
-    print(f"{item[0]}   {item[1]}  {smoothed_bigrams[item[0]]}")
+    print(f"{item[0]}\t {item[1]}\t {smoothed_bigrams[item[0]]}")
 
 
 
