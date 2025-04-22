@@ -36,6 +36,8 @@ Due to the immense amount of memory needed for a full language model, it would n
 
 ## Provided Corpora
 
+### Descriptions and Preprocessing
+
 Provided in the project are two corpora:
 
 1. Brown Corpus
@@ -48,7 +50,7 @@ The BNC Corpus: Baby Edition consists of about 4.6 million tokens after preproce
 
 
 
-### Corpora Citations
+### Citations
 
 BNC Consortium, 2007, British National Corpus, Baby edition, Literary and Linguistic Data Service, http://hdl.handle.net/20.500.14106/2553.
 
