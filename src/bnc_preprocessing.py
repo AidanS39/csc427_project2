@@ -33,10 +33,16 @@ num_sents = len(new_sents)
 
 num_train = (int)(num_sents * 0.8)
 
+num_test_1 = (int)(num_sents * 0.9)
+
 with open("bnc_corpus.txt", "w") as corpus_file:
     for sentence in new_sents[0:num_train]:
         corpus_file.write(space_delimeter.join(sentence) + "\n")
 
 with open("test_bnc_corpus.txt", "w") as corpus_file:
-    for sentence in new_sents[(num_train+1):(num_sents-1)]:
+    for sentence in new_sents[(num_train+1):(num_test_1)]:
+        corpus_file.write(space_delimeter.join(sentence) + "\n")
+
+with open("test_bnc_corpus_2.txt", "w") as corpus_file:
+    for sentence in new_sents[(num_test_1+1):(num_sents-1)]:
         corpus_file.write(space_delimeter.join(sentence) + "\n")

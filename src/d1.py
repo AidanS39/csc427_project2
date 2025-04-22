@@ -324,10 +324,10 @@ unigram_counts = compute_unigram_counts(corpus, vocab)
 
 # UNSMOOTHED BIGRAM MODEL
 
-start_time = time.time()
-bigrams = compute_bigram_model(corpus)
-end_time = time.time()
-print(f"Compute time for bigram model: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+# start_time = time.time()
+# bigrams = compute_bigram_model(corpus)
+# end_time = time.time()
+# print(f"Compute time for bigram model: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
 
 
 
@@ -360,10 +360,10 @@ print(f"Compute time for bigram model: {(int)((end_time - start_time) / 60)} min
 
 # UNSMOOTHED BIGRAM SENTENCE GENERATION
 
-start_time = time.time()
-generate_sentence_unsmoothed_bigram(bigrams, corpus)
-end_time = time.time()
-print(f"Compute time for generating sentences from unsmoothed bigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+# start_time = time.time()
+# generate_sentence_unsmoothed_bigram(bigrams, corpus)
+# end_time = time.time()
+# print(f"Compute time for generating sentences from unsmoothed bigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
 
 
 
