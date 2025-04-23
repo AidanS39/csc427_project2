@@ -16,23 +16,24 @@ This project was developed and tested on the TCNJ ELSA HPC system using Python 3
 
 1. **_Python 3.8.6_**: Other versions of Python may be used but are not guaranteed to work properly. Version 3.8.6 is the only version that was tested on. If running specifically on the TCNJ ELSA HPC system, running `module add python` should install the correct python version onto the machine. 
 2. **_bash shell_**: The project was developed on a bash-based terminal.
-3. **_8 GB of memory_**: Language models inherently use heavy amounts of memory to store lots of counts and probabilities. The program was tested on a machine with 8 GB of memory. Any less memory is not guaranteed to be enough.
+3. **_Large Amounts of Memory_**: Language models inherently use heavy amounts of memory to store lots of counts and probabilities.
 
 ### Execution
 
 1. From the project directory, navigate to the **src** directory by running the command `cd src`
-2. Find the relative file paths of the corpus text file and test set text file you wish to use. Two corpora text files (bnc_corpus.txt, brown_corpus.txt) and one test set (test_bnc_corpus.txt) has been supplied, which is located in the src directory.
+2. Find the relative file paths of the corpus text file and test set text file you wish to use. Two corpora text files (bnc_corpus.txt, brown_corpus.txt) and two test sets (test_bnc_corpus.txt, test_bnc_corpus_2.txt) has been supplied, which is located in the src directory.
 3. Run the command `python3 d1.py <corpus file path> <test-set file path>`, substituting `<corpus file path>` with the file path of the corpus text file, and `<test set file path>` with the file path of the test set text file.
+4. A command line menu will display after the language models are created. Choose an option by typing the corresponding option number, then press `Enter`.
 
 ## Project Structure
 
-The Project consists of three parts: A main program `d1.py`, a preprocessed corpus, and a test set.
+The Project consists of three parts: A main program `d1.py`, a preprocessed corpus (multiple are provided), and a test set (multiple are also provided).
 
 Both the corpus and the test set must be text files with each line serving as a sentence. Each sentence is made up of space-based tokens or words, surrounded by a start of sentence token `<s>` and an end of sentence token `</s>`. Please refer to the `bnc_corpus.txt` and `brown_corpus.txt` files as examples on the required corpus format.
 
 The main program has various functions which serve the purpose of creating unigram and bigram language models, both with unsmoothed (Maximum Likelihood Estimate) and smoothed (with Add-1 Smoothing) versions. The bigram models that are created are considered "sparse", meaning that any bigram pair that does not exist in the corpus is not added to the bigram model. 
 
-Due to the immense amount of memory needed for a full language model, it would not be feasible to create a full model in terms of memory and computation for the machine developed and tested on. Functions were also created to get a probability of a unigram/bigram, which aids the sparse model when using a smoothed bigram model. When a bigram probability of a pair that does not occur in the corpus is needed, the function calculates the probability on the spot using a unigram counts model and the cardinality of the corpus vocabulary.
+Due to the immense amount of memory needed for a full language model, it would not be feasible on a regular home machine to create a full model in terms of memory and computation on a regular home machine. Functions were created to get a probability of a unigram/bigram, which aids the sparse model when using a smoothed bigram model. When a bigram probability of a pair that does not occur in the corpus is needed, the function calculates the probability on the spot using a unigram counts model and the cardinality of the corpus vocabulary.
 
 ## Provided Corpora
 
