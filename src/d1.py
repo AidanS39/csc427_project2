@@ -377,6 +377,163 @@ start_time = time.time()
 smoothed_bigrams = compute_smoothed_bigram_model(corpus)
 end_time = time.time()
 print(f"Compute time for smoothed bigram model: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+
+
+#Take input
+print(f"----------------------------------------------")
+print(f"(Unsmoothed Sentence Gen   0:Unigram, 1:Bigram)")
+print(f"(Smoothed Sentence Gen     2:Unigram, 3:Bigram)")
+print(f"(Smoothed Perplexity       4:Unigram, 5:Bigram)")
+print(f"----------------------------------------------")
+print(f"(Top 10 Probs Unsmoothed   6:Unigram & Bigram)")
+print(f"(Top 10 Probs Smoothed     7:Unigram & Bigram)")
+print(f"----------------------------------------------")
+
+while True:
+    user_input = input("Please enter an integer:")
+
+    if user_input.lower() == 'q':
+        print("Goodbye!")
+        break
+
+    try:
+        user_input = int(user_input) #Convert to int
+
+        if user_input == 0:
+            start_time = time.time()
+            generate_sentence_unigram(unigrams)
+            end_time = time.time()
+            print(f"Compute time for generating sentences from unsmoothed unigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+
+        elif user_input == 1:
+            start_time = time.time()
+            generate_sentence_unsmoothed_bigram(bigrams, corpus)
+            end_time = time.time()
+            print(f"Compute time for generating sentences from unsmoothed bigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+
+        elif user_input == 2:
+            start_time = time.time()
+            generate_sentence_unigram(smoothed_unigrams)
+            end_time = time.time()
+            print(f"Compute time for generating sentences from smoothed unigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+
+        elif user_input == 3:
+            start_time = time.time()
+            generate_sentence_smoothed_bigram(smoothed_bigrams, corpus)
+            end_time = time.time()
+            print(f"Compute time for generating sentences from smoothed bigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+    
+        elif user_input == 4:
+            start_time = time.time()
+            unigram_perplexity = compute_unigram_ppl(test_set, smoothed_unigrams, unigram_counts, len(vocab))
+            end_time = time.time()
+            print(f"unigram perplexity: {unigram_perplexity}")
+            print(f"Compute time for calculating unigram perplexity: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+
+        elif user_input == 5:
+            start_time = time.time()
+            bigram_perplexity = compute_bigram_ppl(test_set, smoothed_bigrams, unigram_counts, len(vocab))
+            end_time = time.time()
+            print(f"bigram perplexity: {bigram_perplexity}")
+            print(f"Compute time for calculating bigram perplexity: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+
+        elif user_input == 6:
+            # calculate length of corpus
+            corpus_length = sum([len(sentence) for sentence in corpus])
+
+            # find the counts of every occuring word in the corpus
+            unigram_counts = compute_unigram_counts(corpus, vocab)
+
+            top_10_unigrams = list()
+            top_10_unigrams.append([" ", -1])
+
+            for key in unigram_counts.keys():
+                value = unigram_counts.get(key)
+                for index in range(len(top_10_unigrams)):
+                    top_value = top_10_unigrams[index][1]
+                    if value > top_value:
+                        top_10_unigrams.insert(index, [key, value])
+                    if len(top_10_unigrams) > 10:
+                        top_10_unigrams.pop()
+                        break
+
+            print("Top 10 Unsmoothed Unigrams")
+            for item in top_10_unigrams:
+                item[1] = item[1] / corpus_length
+                print(f"{item[0]}\t {item[1]}\t {unigrams[item[0]]}")
+
+            # find the counts of every occuring pair in the corpus
+            bigram_counts = compute_bigram_counts(corpus)
+
+            top_10_bigrams = list()
+            top_10_bigrams.append([(" ", " "), -1])
+
+            for key in bigram_counts.keys():
+                value = bigram_counts.get(key)
+                for index in range(len(top_10_bigrams)):
+                    top_value = top_10_bigrams[index][1]
+                    if value > top_value:
+                        top_10_bigrams.insert(index, [key, value])
+                    if len(top_10_bigrams) > 10:
+                        top_10_bigrams.pop()
+                        break
+
+            print("Top 10 Unsmoothed Bigrams")
+            for item in top_10_bigrams:
+                item[1] = item[1] / len(bigram_counts)
+                print(f"{item[0]}\t {item[1]}\t {bigrams[item[0]]}")
+
+
+        elif user_input == 7: 
+            # calculate length of corpus
+            corpus_length = sum([len(sentence) for sentence in corpus])
+
+            # find the counts of every occuring word in the corpus
+            unigram_counts = compute_unigram_counts(corpus, vocab)
+
+            top_10_unigrams = list()
+            top_10_unigrams.append([" ", -1])
+
+            for key in unigram_counts.keys():
+                value = unigram_counts.get(key)
+                for index in range(len(top_10_unigrams)):
+                    top_value = top_10_unigrams[index][1]
+                    if value > top_value:
+                        top_10_unigrams.insert(index, [key, value])
+                    if len(top_10_unigrams) > 10:
+                        top_10_unigrams.pop()
+                        break
+
+            print("Top 10 Smoothed Unigrams")
+            for item in top_10_unigrams:
+                item[1] = item[1] / corpus_length
+                print(f"{item[0]}\t {item[1]}\t {smoothed_unigrams[item[0]]}")
+
+            # find the counts of every occuring pair in the corpus
+            bigram_counts = compute_bigram_counts(corpus)
+
+            top_10_bigrams = list()
+            top_10_bigrams.append([(" ", " "), -1])
+
+            for key in bigram_counts.keys():
+                value = bigram_counts.get(key)
+                for index in range(len(top_10_bigrams)):
+                    top_value = top_10_bigrams[index][1]
+                    if value > top_value:
+                        top_10_bigrams.insert(index, [key, value])
+                    if len(top_10_bigrams) > 10:
+                        top_10_bigrams.pop()
+                        break
+
+            print("Top 10 Smoothed Bigrams")
+            for item in top_10_bigrams:
+                item[1] = item[1] / len(bigram_counts)
+                print(f"{item[0]}\t {item[1]}\t {smoothed_bigrams[item[0]]}")
+        else:
+            print("Invalid input! Please enter a valid integer")
+
+    except ValueError:
+        print("That's not a valid integer. Please enter a valid integer.")
 # 
 # 
 # 
@@ -404,30 +561,30 @@ print(f"Compute time for smoothed bigram model: {(int)((end_time - start_time) /
 # generate_sentence_unigram(smoothed_unigrams)
 # end_time = time.time()
 # print(f"Compute time for generating sentences from smoothed unigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
-# 
+
 # 
 # 
 # # SMOOTHED BIGRAM SENTENCE GENERATION (NOT RELIABLE)
-# 
-# # start_time = time.time()
-# # generate_sentence_smoothed_bigram(smoothed_bigrams, corpus)
-# # end_time = time.time()
-# # print(f"Compute time for generating sentences from smoothed bigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
-#  
-# 
-# 
-# # SMOOTHED UNIGRAM PERPLEXITY
-# 
+# # 
+# start_time = time.time()
+# generate_sentence_smoothed_bigram(smoothed_bigrams, corpus)
+# end_time = time.time()
+# print(f"Compute time for generating sentences from smoothed bigram: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
+ 
+# # 
+# # 
+# # # SMOOTHED UNIGRAM PERPLEXITY
+# # 
 # start_time = time.time()
 # unigram_perplexity = compute_unigram_ppl(test_set, smoothed_unigrams, unigram_counts, len(vocab))
 # end_time = time.time()
 # print(f"unigram perplexity: {unigram_perplexity}")
 # print(f"Compute time for calculating unigram perplexity: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
-# 
-# 
-# 
-# # SMOOTHED BIGRAM PERPLEXITY
-# 
+
+
+
+# SMOOTHED BIGRAM PERPLEXITY
+
 # start_time = time.time()
 # bigram_perplexity = compute_bigram_ppl(test_set, smoothed_bigrams, unigram_counts, len(vocab))
 # end_time = time.time()
@@ -436,100 +593,100 @@ print(f"Compute time for smoothed bigram model: {(int)((end_time - start_time) /
 
 
 
-# TOP 10 MOST PROBABLE UNIGRAMS/BIGRAMS
+# # TOP 10 MOST PROBABLE UNIGRAMS/BIGRAMS
 
-# calculate length of corpus
-corpus_length = sum([len(sentence) for sentence in corpus])
+# # calculate length of corpus
+# corpus_length = sum([len(sentence) for sentence in corpus])
 
-# find the counts of every occuring word in the corpus
-unigram_counts = compute_unigram_counts(corpus, vocab)
+# # find the counts of every occuring word in the corpus
+# unigram_counts = compute_unigram_counts(corpus, vocab)
 
-top_10_unigrams = list()
-top_10_unigrams.append([" ", -1])
+# top_10_unigrams = list()
+# top_10_unigrams.append([" ", -1])
 
-for key in unigram_counts.keys():
-    value = unigram_counts.get(key)
-    for index in range(len(top_10_unigrams)):
-        top_value = top_10_unigrams[index][1]
-        if value > top_value:
-            top_10_unigrams.insert(index, [key, value])
-        if len(top_10_unigrams) > 10:
-            top_10_unigrams.pop()
-            break
+# for key in unigram_counts.keys():
+#     value = unigram_counts.get(key)
+#     for index in range(len(top_10_unigrams)):
+#         top_value = top_10_unigrams[index][1]
+#         if value > top_value:
+#             top_10_unigrams.insert(index, [key, value])
+#         if len(top_10_unigrams) > 10:
+#             top_10_unigrams.pop()
+#             break
 
-print("Top 10 Unsmoothed Unigrams")
-for item in top_10_unigrams:
-    item[1] = item[1] / corpus_length
-    print(f"{item[0]}\t {item[1]}\t {unigrams[item[0]]}")
+# print("Top 10 Unsmoothed Unigrams")
+# for item in top_10_unigrams:
+#     item[1] = item[1] / corpus_length
+#     print(f"{item[0]}\t {item[1]}\t {unigrams[item[0]]}")
 
-# find the counts of every occuring pair in the corpus
-bigram_counts = compute_bigram_counts(corpus)
+# # find the counts of every occuring pair in the corpus
+# bigram_counts = compute_bigram_counts(corpus)
 
-top_10_bigrams = list()
-top_10_bigrams.append([(" ", " "), -1])
+# top_10_bigrams = list()
+# top_10_bigrams.append([(" ", " "), -1])
 
-for key in bigram_counts.keys():
-    value = bigram_counts.get(key)
-    for index in range(len(top_10_bigrams)):
-        top_value = top_10_bigrams[index][1]
-        if value > top_value:
-            top_10_bigrams.insert(index, [key, value])
-        if len(top_10_bigrams) > 10:
-            top_10_bigrams.pop()
-            break
+# for key in bigram_counts.keys():
+#     value = bigram_counts.get(key)
+#     for index in range(len(top_10_bigrams)):
+#         top_value = top_10_bigrams[index][1]
+#         if value > top_value:
+#             top_10_bigrams.insert(index, [key, value])
+#         if len(top_10_bigrams) > 10:
+#             top_10_bigrams.pop()
+#             break
 
-print("Top 10 Unsmoothed Bigrams")
-for item in top_10_bigrams:
-    item[1] = item[1] / len(bigram_counts)
-    print(f"{item[0]}\t {item[1]}\t {bigrams[item[0]]}")
+# print("Top 10 Unsmoothed Bigrams")
+# for item in top_10_bigrams:
+#     item[1] = item[1] / len(bigram_counts)
+#     print(f"{item[0]}\t {item[1]}\t {bigrams[item[0]]}")
 
 
-# TOP 10 MOST PROBABLE SMOOTHED UNIGRAMS/BIGRAMS
+# # TOP 10 MOST PROBABLE SMOOTHED UNIGRAMS/BIGRAMS
 
-# calculate length of corpus
-corpus_length = sum([len(sentence) for sentence in corpus])
+# # calculate length of corpus
+# corpus_length = sum([len(sentence) for sentence in corpus])
 
-# find the counts of every occuring word in the corpus
-unigram_counts = compute_unigram_counts(corpus, vocab)
+# # find the counts of every occuring word in the corpus
+# unigram_counts = compute_unigram_counts(corpus, vocab)
 
-top_10_unigrams = list()
-top_10_unigrams.append([" ", -1])
+# top_10_unigrams = list()
+# top_10_unigrams.append([" ", -1])
 
-for key in unigram_counts.keys():
-    value = unigram_counts.get(key)
-    for index in range(len(top_10_unigrams)):
-        top_value = top_10_unigrams[index][1]
-        if value > top_value:
-            top_10_unigrams.insert(index, [key, value])
-        if len(top_10_unigrams) > 10:
-            top_10_unigrams.pop()
-            break
+# for key in unigram_counts.keys():
+#     value = unigram_counts.get(key)
+#     for index in range(len(top_10_unigrams)):
+#         top_value = top_10_unigrams[index][1]
+#         if value > top_value:
+#             top_10_unigrams.insert(index, [key, value])
+#         if len(top_10_unigrams) > 10:
+#             top_10_unigrams.pop()
+#             break
 
-print("Top 10 Smoothed Unigrams")
-for item in top_10_unigrams:
-    item[1] = item[1] / corpus_length
-    print(f"{item[0]}\t {item[1]}\t {smoothed_unigrams[item[0]]}")
+# print("Top 10 Smoothed Unigrams")
+# for item in top_10_unigrams:
+#     item[1] = item[1] / corpus_length
+#     print(f"{item[0]}\t {item[1]}\t {smoothed_unigrams[item[0]]}")
 
-# find the counts of every occuring pair in the corpus
-bigram_counts = compute_bigram_counts(corpus)
+# # find the counts of every occuring pair in the corpus
+# bigram_counts = compute_bigram_counts(corpus)
 
-top_10_bigrams = list()
-top_10_bigrams.append([(" ", " "), -1])
+# top_10_bigrams = list()
+# top_10_bigrams.append([(" ", " "), -1])
 
-for key in bigram_counts.keys():
-    value = bigram_counts.get(key)
-    for index in range(len(top_10_bigrams)):
-        top_value = top_10_bigrams[index][1]
-        if value > top_value:
-            top_10_bigrams.insert(index, [key, value])
-        if len(top_10_bigrams) > 10:
-            top_10_bigrams.pop()
-            break
+# for key in bigram_counts.keys():
+#     value = bigram_counts.get(key)
+#     for index in range(len(top_10_bigrams)):
+#         top_value = top_10_bigrams[index][1]
+#         if value > top_value:
+#             top_10_bigrams.insert(index, [key, value])
+#         if len(top_10_bigrams) > 10:
+#             top_10_bigrams.pop()
+#             break
 
-print("Top 10 Smoothed Bigrams")
-for item in top_10_bigrams:
-    item[1] = item[1] / len(bigram_counts)
-    print(f"{item[0]}\t {item[1]}\t {smoothed_bigrams[item[0]]}")
+# print("Top 10 Smoothed Bigrams")
+# for item in top_10_bigrams:
+#     item[1] = item[1] / len(bigram_counts)
+#     print(f"{item[0]}\t {item[1]}\t {smoothed_bigrams[item[0]]}")
 
 
 
