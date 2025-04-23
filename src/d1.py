@@ -378,19 +378,17 @@ smoothed_bigrams = compute_smoothed_bigram_model(corpus)
 end_time = time.time()
 print(f"Compute time for smoothed bigram model: {(int)((end_time - start_time) / 60)} minutes {(end_time - start_time) % 60} seconds")
 
-
-#Take input
-print(f"----------------------------------------------")
-print(f"Unsmoothed Sentence Gen   0:Unigram, 1:Bigram")
-print(f"Smoothed Sentence Gen     2:Unigram, 3:Bigram")
-print(f"Smoothed Perplexity       4:Unigram, 5:Bigram")
-print(f"----------------------------------------------")
-print(f"Top 10 Probs Unsmoothed   6:Unigram & Bigram")
-print(f"Top 10 Probs Smoothed     7:Unigram & Bigram")
-print(f"----------------------------------------------")
-
 while True:
-    user_input = input("Please enter an integer:")
+    #Take input
+    print(f"----------------------------------------------")
+    print(f"Unsmoothed Sentence Gen   0:Unigram, 1:Bigram")
+    print(f"Smoothed Sentence Gen     2:Unigram, 3:Bigram")
+    print(f"Smoothed Perplexity       4:Unigram, 5:Bigram")
+    print(f"----------------------------------------------")
+    print(f"Top 10 Probs Unsmoothed   6:Unigram & Bigram")
+    print(f"Top 10 Probs Smoothed     7:Unigram & Bigram")
+    print(f"----------------------------------------------")
+    user_input = input("Please enter an integer: ")
 
     if user_input.lower() == 'q':
         print("Goodbye!")
@@ -458,8 +456,8 @@ while True:
                         break
 
             print("Top 10 Unsmoothed Unigrams")
+            print(f"Word\t Count\t Probability")
             for item in top_10_unigrams:
-                item[1] = item[1] / corpus_length
                 print(f"{item[0]}\t {item[1]}\t {unigrams[item[0]]}")
 
             # find the counts of every occuring pair in the corpus
@@ -479,8 +477,8 @@ while True:
                         break
 
             print("Top 10 Unsmoothed Bigrams")
+            print(f"Pair\t\t Count\t Probability")
             for item in top_10_bigrams:
-                item[1] = item[1] / len(bigram_counts)
                 print(f"{item[0]}\t {item[1]}\t {bigrams[item[0]]}")
 
 
@@ -505,6 +503,7 @@ while True:
                         break
 
             print("Top 10 Smoothed Unigrams")
+            print(f"Word\t Count\t Probability")
             for item in top_10_unigrams:
                 item[1] = item[1] / corpus_length
                 print(f"{item[0]}\t {item[1]}\t {smoothed_unigrams[item[0]]}")
@@ -526,14 +525,14 @@ while True:
                         break
 
             print("Top 10 Smoothed Bigrams")
+            print(f"Pair\t\t Count\t Probability")
             for item in top_10_bigrams:
-                item[1] = item[1] / len(bigram_counts)
                 print(f"{item[0]}\t {item[1]}\t {smoothed_bigrams[item[0]]}")
         else:
             print("Invalid input! Please enter a valid integer")
 
     except ValueError:
-        print("That's not a valid integer. Please enter a valid integer.")
+        print("That's not a valid option. Please enter a valid option.")
 # 
 # 
 # 
