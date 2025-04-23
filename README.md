@@ -33,7 +33,7 @@ Both the corpus and the test set must be text files with each line serving as a 
 
 The main program has various functions which serve the purpose of creating unigram and bigram language models, both with unsmoothed (Maximum Likelihood Estimate) and smoothed (with Add-1 Smoothing) versions. The bigram models that are created are considered "sparse", meaning that any bigram pair that does not exist in the corpus is not added to the bigram model. 
 
-Due to the immense amount of memory needed for a full language model, it would not be feasible on a regular home machine to create a full model in terms of memory and computation on a regular home machine. Functions were created to get a probability of a unigram/bigram, which aids the sparse model when using a smoothed bigram model. When a bigram probability of a pair that does not occur in the corpus is needed, the function calculates the probability on the spot using a unigram counts model and the cardinality of the corpus vocabulary.
+Due to the immense amount of memory needed for a full language model, it would not be feasible to create a full model in terms of memory and computation on a regular home machine. Functions were created to get a probability of a unigram/bigram, which aids the sparse model when using a smoothed bigram model. When a bigram probability of a pair that does not occur in the corpus is needed, the function calculates the probability on the spot using a unigram counts model and the cardinality of the corpus vocabulary.
 
 ## Provided Corpora
 
