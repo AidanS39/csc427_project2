@@ -381,12 +381,12 @@ print(f"Compute time for smoothed bigram model: {(int)((end_time - start_time) /
 
 #Take input
 print(f"----------------------------------------------")
-print(f"(Unsmoothed Sentence Gen   0:Unigram, 1:Bigram)")
-print(f"(Smoothed Sentence Gen     2:Unigram, 3:Bigram)")
-print(f"(Smoothed Perplexity       4:Unigram, 5:Bigram)")
+print(f"Unsmoothed Sentence Gen   0:Unigram, 1:Bigram")
+print(f"Smoothed Sentence Gen     2:Unigram, 3:Bigram")
+print(f"Smoothed Perplexity       4:Unigram, 5:Bigram")
 print(f"----------------------------------------------")
-print(f"(Top 10 Probs Unsmoothed   6:Unigram & Bigram)")
-print(f"(Top 10 Probs Smoothed     7:Unigram & Bigram)")
+print(f"Top 10 Probs Unsmoothed   6:Unigram & Bigram")
+print(f"Top 10 Probs Smoothed     7:Unigram & Bigram")
 print(f"----------------------------------------------")
 
 while True:
