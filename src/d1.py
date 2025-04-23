@@ -388,7 +388,7 @@ while True:
     print(f"Top 10 Probs Unsmoothed   6:Unigram & Bigram")
     print(f"Top 10 Probs Smoothed     7:Unigram & Bigram")
     print(f"----------------------------------------------")
-    user_input = input("Please enter an integer: ")
+    user_input = input("Please enter an integer or 'q' to exit: ")
 
     if user_input.lower() == 'q':
         print("Goodbye!")
@@ -505,7 +505,6 @@ while True:
             print("Top 10 Smoothed Unigrams")
             print(f"Word\t Count\t Probability")
             for item in top_10_unigrams:
-                item[1] = item[1] / corpus_length
                 print(f"{item[0]}\t {item[1]}\t {smoothed_unigrams[item[0]]}")
 
             # find the counts of every occuring pair in the corpus
