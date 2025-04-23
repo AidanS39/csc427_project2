@@ -231,7 +231,10 @@ def generate_sentence_unsmoothed_bigram(model, corpus):
 
 # generates a sentence based off a smoothed bigram model
 def generate_sentence_smoothed_bigram(model, corpus):
-
+    
+    count = 0
+    limit = 30
+    
     # initialize vocab
     vocab = set()
     for sentence in corpus:
@@ -245,6 +248,9 @@ def generate_sentence_smoothed_bigram(model, corpus):
     
     sentence = ["<s>"]
     while (sentence[-1] != "</s>"):
+        if count > limit:
+            sentence.append("</s>")
+            break
         random_prob = random.random()
         sum_probs = 0
 
@@ -266,6 +272,7 @@ def generate_sentence_smoothed_bigram(model, corpus):
                 if (sum_probs >= random_prob) and (bigram_pair != "<s>"):
                     sentence.append(word)
                     break
+        count += 1
         if sum_probs < random_prob:
             sentence.append("</s>")
 
